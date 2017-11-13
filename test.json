@@ -1,0 +1,78 @@
+{
+  "originalRequest": {
+    "source": "spark",
+    "data": {
+      "data": {
+        "created": "2017-11-09T23:38:37.042Z",
+        "personEmail": "amachhab@cisco.com",
+        "personId": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kODhiZDc1ZS1iOGMzLTQ4Y2YtYWJjNy01ZWM1Y2JjNzU4YWM",
+        "id": "Y2lzY29zcGFyazovL3VzL01FU1NBR0UvMWI4YjY1MjAtYzVhNy0xMWU3LWFkNjQtMTVkNGYzNThlYTY4",
+        "roomId": "Y2lzY29zcGFyazovL3VzL1JPT00vY2E1NWZlMjMtYzIwMS0zYTA3LWIxMWItNjY2Y2FjNzgxOTY2",
+        "roomType": "direct"
+      },
+      "resource": "messages",
+      "created": "2017-11-09T23:33:21.246Z",
+      "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY",
+      "actorId": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kODhiZDc1ZS1iOGMzLTQ4Y2YtYWJjNy01ZWM1Y2JjNzU4YWM",
+      "createdBy": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS9kZjdmZjhmMy1mMmY3LTQyZjUtODA4OS1iMDJkNGVmNjA2ZDM",
+      "appId": "Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OL0MzMmM4MDc3NDBjNmU3ZGYxMWRhZjE2ZjIyOGRmNjI4YmJjYTQ5YmE1MmZlY2JiMmM3ZDUxNWNiNGEwY2M5MWFh",
+      "name": "webhhok10ad63cc-dbc4-47f1-8970-c4ca0568abb3",
+      "id": "Y2lzY29zcGFyazovL3VzL1dFQkhPT0svOGQ0NzllN2ItNmU0Yi00ODc1LTk5NWEtNjFkZjZkMDYzZGYz",
+      "event": "created",
+      "targetUrl": "https://bots.api.ai/spark/10ad63cc-dbc4-47f1-8970-c4ca0568abb3/webhook",
+      "ownedBy": "creator",
+      "status": "active"
+    }
+  },
+  "id": "83c5ac8d-ad2c-452f-8e1f-378f941b89a2",
+  "timestamp": "2017-11-09T23:38:37.89Z",
+  "lang": "en",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "amachhab@cisco.com",
+    "speech": "",
+    "action": "user.add",
+    "actionIncomplete": false,
+    "parameters": {
+      "any": [],
+      "email": [
+        "amachhab@cisco.com"
+      ]
+    },
+    "contexts": [
+      {
+        "name": "addtolist-followup",
+        "parameters": {
+          "email.original": "amachhab@cisco.com",
+          "any.original": "",
+          "any": [],
+          "email": [
+            "amachhab@cisco.com"
+          ]
+        },
+        "lifespan": 2
+      }
+    ],
+    "metadata": {
+      "intentId": "3b6738c2-a9b6-4f72-ba76-90c0106fda47",
+      "webhookUsed": "true",
+      "webhookForSlotFillingUsed": "false",
+      "intentName": "Add to List"
+    },
+    "fulfillment": {
+      "speech": "",
+      "messages": [
+        {
+          "type": 0,
+          "speech": ""
+        }
+      ]
+    },
+    "score": 1
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success"
+  },
+  "sessionId": "11f3c90c-f353-4f89-97c5-2c62f4ee7c60"
+}
