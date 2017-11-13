@@ -1,6 +1,6 @@
 const functions = require('firebase-functions'); // Cloud Functions for Firebase library
 const superagent = require('superagent');
-const { SPARK_TOKEN } = require('../config');
+const { SPARK_TOKEN, TROPO_TOKEN } = require('../config');
 const moment = require('moment');
 const Spark = require('ciscospark').init({
   credentials: {
@@ -19,7 +19,7 @@ const db = require('./userDb');
  */
 const sipCall = async (address) => {
   const payload = {
-    token: '5044427361756b4b7863626c64696a6b77784956454678694d4c794c506b6169655a76426e636158506a6f70',
+    token: TROPO_TOKEN,
     action: 'create',
     network: 'SIP',
     numberToDial: `sip:${address}`,
