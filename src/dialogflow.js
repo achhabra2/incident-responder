@@ -94,7 +94,7 @@ exports.dialogflowFulfillment = functions.https.onRequest((request, response) =>
     },
     'endpoint.get': async () => {
       let mdMessage = 'Use the following [link](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send a HTTP POST request with  ';
-      mdMessage += 'JSON Body:\r\n\`\`\` javascript\r\n{\r\n  email: {{YOUR-EMAIL}}, \r\n  title: {{EVENT-NAME}},\r\n  data: {{PAYLOAD-DATA}},\r\n  call: {{true|false}}\r\n}\r\n\`\`\`';
+      mdMessage += 'JSON Body:\r\n\`\`\` javascript\r\n{\r\n  "email": "{{YOUR-EMAIL}}", \r\n  "title": "{{EVENT-NAME}}",\r\n  "data": "{{PAYLOAD-DATA}}",\r\n  "call": {{true|false}}\r\n}\r\n\`\`\`';
       Spark.messages.create({
         roomId: originalMessage.roomId,
         markdown: mdMessage,
