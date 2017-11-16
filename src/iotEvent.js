@@ -49,47 +49,62 @@ const sipCall = async (address) => {
  */
 const fireEvent = async (options) => {
   const {
+    id,
     email,
     title = 'IOT Event',
     data = undefined,
     call,
   } = options;
+  let user;
   try {
-    const { iotMessage, iotGroup } = await db.getUser(email);
-    if (iotMessage && iotGroup) {
-      const timeString = moment().format('MMM Do - h:mm a');
-      const room = await Spark.rooms.create({
-        title: `${title} @ ${timeString}`,
-      });
-      const memberships = [];
-      iotGroup.forEach((member) => {
-        const p = Spark.memberships.create({
-          roomId: room.id,
-          personEmail: member,
-        });
-        memberships.push(p);
-      });
-      await Promise.all(memberships);
-      await Spark.messages.create({
-        roomId: room.id,
-        markdown: iotMessage,
-        text: iotMessage,
-      });
-      if (data) {
-        Spark.messages.create({
-          roomId: room.id,
-          markdown: `Data Sent: ${data}`,
-          text: `Data Sent: ${data}`,
-        });
-      }
-      if (call) {
-        const roomDetail = await Spark.rooms.get(room.id);
-        console.log(`Room Detail: ${JSON.stringify(roomDetail)}`);
-        sipCall(roomDetail.sipAddress);
-      }
+    if (id) {
+      user = await db.getUserbyId(id);
     }
-  } catch (error) {
-    console.error(error);
+    if (email) {
+      user = await db.getUser(email);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  if (user) {
+    try {
+      const { iotMessage, iotGroup } = user;
+      if (iotMessage && iotGroup) {
+        const timeString = moment().format('MMM Do - h:mm a');
+        const room = await Spark.rooms.create({
+          title: `${title} @ ${timeString}`,
+        });
+        const memberships = [];
+        iotGroup.forEach((member) => {
+          const p = Spark.memberships.create({
+            roomId: room.id,
+            personEmail: member,
+          });
+          memberships.push(p);
+        });
+        await Promise.all(memberships);
+        await Spark.messages.create({
+          roomId: room.id,
+          markdown: iotMessage,
+          text: iotMessage,
+        });
+        if (data) {
+          Spark.messages.create({
+            roomId: room.id,
+            markdown: `Data Sent: ${data}`,
+            text: `Data Sent: ${data}`,
+          });
+        }
+        if (call) {
+          const roomDetail = await Spark.rooms.get(room.id);
+          console.log(`Room Detail: ${JSON.stringify(roomDetail)}`);
+          sipCall(roomDetail.sipAddress);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 };
 

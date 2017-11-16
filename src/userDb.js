@@ -1,8 +1,6 @@
-const { MONGO_URI } = require('../config');
+import mongoose, { Schema } from 'mongoose';
+import { MONGO_URI } from '../config';
 
-const mongoose = require('mongoose');
-
-const { Schema } = mongoose;
 // Connection Strings to MongoDB Instance
 mongoose.Promise = global.Promise;
 
@@ -32,7 +30,6 @@ const userSchema = new Schema({
 
 /**
  * @typedef {object} User
- * @property {number} _id
  * @property {string} email
  * @property {string[]} iotGroup
  * @property {string} iotMessage
@@ -40,44 +37,45 @@ const userSchema = new Schema({
 const User = mongoose.model('iotUser', userSchema);
 
 /**
- *
- *
- * @param {number} id
+ * @param {number} personEmail
  * @param {string} email
  * @returns {Promise<User>}
  */
-const addEmail = (id, email) => User.findOneAndUpdate({ email: id }, { $push: { iotGroup: email } }, { new: true, upsert: true }).exec();
+export const addEmail = (personEmail, email) => User.findOneAndUpdate({ email: personEmail }, { $push: { iotGroup: email } }, { new: true, upsert: true }).exec();
 
 /**
- *
- *
- * @param {number} id
+ * @param {string} personEmail
  * @param {string} email
  * @returns {Promise<User>}
  */
-const removeEmail = (id, email) => User.findOneAndUpdate({ email: id }, { $pull: { iotGroup: email } }, { new: true, upsert: true }).exec();
+export const removeEmail = (personEmail, email) => User.findOneAndUpdate({ email: personEmail }, { $pull: { iotGroup: email } }, { new: true, upsert: true }).exec();
 
 /**
- *
- *
- * @param {number} id
+ * @param {string} personEmail Spark User's email
  * @param {string} message
  * @returns {Promise<User>}
  */
-const addMessage = (id, message) => User.findOneAndUpdate({ email: id }, { iotMessage: message }, { new: true, upsert: true }).exec();
+export const addMessage = (personEmail, message) => User.findOneAndUpdate({ email: personEmail }, { iotMessage: message }, { new: true, upsert: true }).exec();
 
 /**
- *
- *
- * @param {number} id
+ * @param {string} email Spark User's email
  * @returns {Promise<User>}
  */
-const getUser = id => User.findOne({ email: id }).exec();
+export const getUser = email => User.findOne({ email }).exec();
 
+/**
+ * @param {string} stringId MongoDB ObjectID
+ * @returns {Promise<User>}
+ */
+export const getUserbyId = (stringId) => {
+  const id = new mongoose.Types.ObjectId(stringId);
+  return User.findById(id).exec();
+};
 
-module.exports = {
+export default {
   addEmail,
   removeEmail,
   addMessage,
   getUser,
+  getUserbyId,
 };

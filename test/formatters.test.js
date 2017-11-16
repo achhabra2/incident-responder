@@ -1,7 +1,7 @@
+/* eslint-disable */
 const chai = require('chai');
 
 chai.should();
-// const sinon = require('sinon');
 const expect = chai.expect;
 
 const formatters = require('../dist/formatters');

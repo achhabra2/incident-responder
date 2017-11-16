@@ -1,12 +1,13 @@
-
-
-import { sendDataResponse, sendResponse, followupResponse, getPersonStr } from './formatters';
+import * as functions from 'firebase-functions';
+import express from 'express';
+import bodyParser from 'body-parser';
+import { sendResponse, followupResponse, getPersonStr } from './formatters';
 import { fireEvent } from './iotEvent';
+import { SPARK_TOKEN } from '../config';
+import db from './userDb';
 
-const functions = require('firebase-functions'); // Cloud Functions for Firebase library
-const DialogflowApp = require('actions-on-google').DialogflowApp; // Google Assistant helper library
-const SPARK_TOKEN = require('../config').SPARK_TOKEN;
-const db = require('./userDb');
+const app = express();
+app.use(bodyParser.json());
 
 const Spark = require('ciscospark').init({
   credentials: {
@@ -16,30 +17,30 @@ const Spark = require('ciscospark').init({
   },
 });
 
-exports.dialogflowFulfillment = functions.https.onRequest((request, response) => {
-  console.log(`Request headers: ${JSON.stringify(request.headers)}`);
-  console.log(`Request body: ${JSON.stringify(request.body)}`);
+function fulfillment(request, response) {
+  // console.log(`Request headers: ${JSON.stringify(request.headers)}`);
+  // console.log(`Request body: ${JSON.stringify(request.body)}`);
 
   // // An action is a string used to identify what needs to be done in fulfillment
   // const action = request.body.result.action; // https://dialogflow.com/docs/actions-and-parameters
   // const inputContexts = request.body.result.contexts; // https://dialogflow.com/docs/contexts
   // const parameters = request.body.result.parameters; //
 
-  let { action, parameters, inputContexts } = request.body.result;
+  let { action, parameters, inputContexts } = request.body.result; // eslint-disable-line
 
   const originalMessage = request.body.originalRequest.data.data;
-  // Get the request source (Google Assistant, Slack, API, etc) and initialize DialogflowApp
-  const requestSource = (request.body.originalRequest) ? request.body.originalRequest.source : undefined;
-  const app = new DialogflowApp({ request, response });
 
   // Create handlers for Dialogflow actions as well as a 'default' handler
   const actionHandlers = {
     'user.add': async () => {
       let emailString = '';
+      /* eslint-disable */
+      // console.log(`Adding Email to list for ${originalMessage.personEmail}: ${parameters.email}.`);
       for (const email of parameters.email) {
         emailString += `**${email}** `;
-        await db.addEmail(originalMessage.personEmail, email);
+        let user = await db.addEmail(originalMessage.personEmail, email);
       }
+      /* eslint-enable */
       Spark.messages.create({
         roomId: originalMessage.roomId,
         markdown: `Successfully added email(s) to your notification list: ${emailString}`,
@@ -71,6 +72,7 @@ exports.dialogflowFulfillment = functions.https.onRequest((request, response) =>
       const user = await db.getUser(originalMessage.personEmail);
       if (user.iotGroup && parameters.number) {
         const deletedUsers = [];
+        /* eslint-disable */
         for (const number of parameters.number) {
           if (number - 1 < user.iotGroup.length) {
             deletedUsers.push(user.iotGroup[number - 1]);
@@ -80,26 +82,44 @@ exports.dialogflowFulfillment = functions.https.onRequest((request, response) =>
             return;
           }
         }
+        /* eslint-enable */
         sendResponse(response, `Deleted user(s) ${deletedUsers.toString()} successfully.`);
       } else sendResponse(response, 'Invalid request. Error Deleting User. ');
     },
     'user.list': async () => {
       const user = await db.getUser(originalMessage.personEmail);
       const personStr = getPersonStr(user);
-      sendResponse(response, 'Here is your notification list: ');
-      Spark.messages.create({
-        roomId: originalMessage.roomId,
-        markdown: `${personStr}`,
-      });
+      if (personStr) {
+        sendResponse(response, 'Here is your notification list: ');
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: `${personStr}`,
+        });
+      } else {
+        sendResponse(response, 'Sorry you have no one in your list. ');
+      }
     },
     'endpoint.get': async () => {
-      let mdMessage = 'Use the following [link](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send a HTTP POST request with  ';
-      mdMessage += 'JSON Body:\r\n\`\`\` javascript\r\n{\r\n  email: {{YOUR-EMAIL}}, \r\n  title: {{EVENT-NAME}},\r\n  data: {{PAYLOAD-DATA}},\r\n  call: {{true|false}}\r\n}\r\n\`\`\`';
-      Spark.messages.create({
-        roomId: originalMessage.roomId,
-        markdown: mdMessage,
-      });
-      response.end();
+      const user = await db.getUser(originalMessage.personEmail);
+      if (user) {
+        const payload = JSON.stringify({
+          id: user._id,
+          email: originalMessage.personEmail,
+          title: 'Your Event Title',
+          data: 'Optional Data Message to be sent. ',
+          call: false,
+        }, null, 2);
+        const comments = '// data and call are optional. \r\n// call is a true|false argument.';
+        let mdMessage = 'Use the following [link](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send a HTTP POST request with  ';
+        mdMessage += `JSON Body:\r\n\`\`\` javascript\r\n${payload}\r\n${comments}\r\n\`\`\``;
+        await Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: mdMessage,
+        });
+        response.end();
+      } else {
+        sendResponse('Looks like you have not added any users yet. Please finish configuration first.');
+      }
     },
     'user.messages.add': async () => {
       if (parameters.message) {
@@ -136,4 +156,7 @@ exports.dialogflowFulfillment = functions.https.onRequest((request, response) =>
 
   // Run the proper handler function to handle the request from Dialogflow
   actionHandlers[action]();
-});
+}
+
+app.post('/', fulfillment);
+exports.dialogflowFulfillment = functions.https.onRequest(app);
