@@ -14,8 +14,8 @@ const Spark = require('ciscospark').init({
 });
 
 function fulfillment(request, response) {
-  // console.log(`Request headers: ${JSON.stringify(request.headers)}`);
-  // console.log(`Request body: ${JSON.stringify(request.body)}`);
+  console.log(`Request headers: ${JSON.stringify(request.headers)}`);
+  console.log(`Request body: ${JSON.stringify(request.body)}`);
 
   let { action, parameters, inputContexts } = request.body.result; // eslint-disable-line
 
@@ -28,8 +28,8 @@ function fulfillment(request, response) {
       /* eslint-disable */
       // console.log(`Adding Email to list for ${originalMessage.personEmail}: ${parameters.email}.`);
       for (const email of parameters.email) {
-        emailString += `**${email}** `;
         let user = await db.addEmail(originalMessage.personEmail, email);
+        emailString += `**${email}**, `;
       }
       /* eslint-enable */
       Spark.messages.create({
@@ -95,7 +95,7 @@ function fulfillment(request, response) {
       if (user) {
         const payload = JSON.stringify({
           id: user._id,
-          email: originalMessage.personEmail,
+          // email: originalMessage.personEmail,
           title: 'Your Event Title',
           data: 'Optional Data Message to be sent. ',
           call: false,
@@ -114,9 +114,13 @@ function fulfillment(request, response) {
     },
     'user.messages.add': async () => {
       if (parameters.message) {
-        await db.addMessage(originalMessage.personEmail, parameters.message);
-        sendResponse(response, 'Successfully Updated IOT Event Message');
-      } else sendResponse(response, 'Error Updating Message');
+        try {
+          await db.addMessage(originalMessage.personEmail, parameters.message);
+          sendResponse(response, 'Successfully Updated IOT Event Message');
+        } catch (error) {
+          sendResponse(response, 'Error updating your message. ');
+        }
+      } else sendResponse(response, 'No message specified. ');
     },
     'user.messages.get': async () => {
       try {
