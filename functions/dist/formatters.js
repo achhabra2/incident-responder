@@ -24,23 +24,6 @@ var sendResponse = function sendResponse(response, responseToUser) {
   }
 };
 
-var sendDataResponse = function sendDataResponse(httpRes, message) {
-  var responseJson = {
-    speech: message.text,
-    displayText: message.text,
-    data: {
-      spark: {
-        roomId: message.roomId,
-        markdown: message.markdown } } };
-
-
-
-  console.log('Sending Response: ');
-  console.log(responseJson);
-  httpRes.json(responseJson);
-};
-
-
 var followupResponse = function followupResponse(httpRes, event) {
   var responseJson = {
     speech: 'Who would you like to remove?:',
@@ -64,7 +47,6 @@ var getPersonStr = function getPersonStr(user) {
 };exports.
 
 
-sendDataResponse = sendDataResponse;exports.
 sendResponse = sendResponse;exports.
 followupResponse = followupResponse;exports.
 getPersonStr = getPersonStr;

@@ -24,23 +24,6 @@ const sendResponse = (response, responseToUser) => {
   }
 };
 
-const sendDataResponse = (httpRes, message) => {
-  const responseJson = {
-    speech: message.text,
-    displayText: message.text,
-    data: {
-      spark: {
-        roomId: message.roomId,
-        markdown: message.markdown,
-      },
-    },
-  };
-  console.log('Sending Response: ');
-  console.log(responseJson);
-  httpRes.json(responseJson);
-};
-
-
 const followupResponse = (httpRes, event) => {
   const responseJson = {
     speech: 'Who would you like to remove?:',
@@ -64,7 +47,6 @@ const getPersonStr = (user) => {
 };
 
 export {
-  sendDataResponse,
   sendResponse,
   followupResponse,
   getPersonStr,
