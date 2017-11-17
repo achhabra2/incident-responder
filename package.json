@@ -5,7 +5,7 @@
   "scripts": {
     "install": "cd functions && npm install; cd ..",
     "test": "cd functions && npm test; cd ..",
-    "dev": "firebase serve --only functions",
+    "dev": "cd functions && npm run dev; cd ..",
     "deploy": "firebase deploy --only functions",
     "coverage": "cd functions && npm run coverage; cd ..",
     "prepare": "cd functions && npm run prepare; cd ..",

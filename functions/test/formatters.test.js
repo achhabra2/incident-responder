@@ -11,8 +11,8 @@ describe('Helper Functions', () => {
     formatters.should.have.property('sendResponse');
     formatters.sendResponse.should.be.a('function');
   });
-  it('Should return function SendDataResponse', () => {
-    formatters.should.have.property('sendDataResponse');
+  it('Should return function getPersonStr', () => {
+    formatters.should.have.property('getPersonStr');
     formatters.sendResponse.should.be.a('function');
   });
 });

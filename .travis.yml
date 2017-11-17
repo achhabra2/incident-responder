@@ -2,15 +2,13 @@ sudo: false
 language: node_js
 node_js:
   - node
+after_success: 
+  - npm run coverage
+before_deploy:
+  - npm install -g firebase-tools
+  - npm run prepare
+deploy:
+  - firebase deploy --token $FIREBASE_TOKEN --only functions
 notifications:
   email:
     - aman.chhabra1@gmail.com
-cache:
-  directories:
-    - "node_modules"
-after_success: npm run coverage
-deploy:
-  provider: firebase
-  token:
-    secure: "Zdz9qlHz0a/2/tG8EnG7hVADJPeds4jldwyk+iwic/FbmaiwzitJ8tRpj/L8EbxrBTWI/WxHQqXY1L/ZblXCxFRZAj76CcNIGaOwr1vaiqEtlDh4azrv/V9DIhvv6Q3VSjCkwZz4SdFv0hkERyOuYWJtJpQbOLPn6zHwok3pPDXKi0ou9NrriOmyzPJRGxVDCgndSZFYav+syP86IIMNjOx/C+/eoS4dvlGPwXlgFEQlkUypymdoq/PrDCVPjqjpA8cbQPo3TrCHcamw3aCkSBJ/hKFVFlU6KKrV+Y56IN59tulVrOOG+REdrdZNYHwVCj4U3PRKRy2KNfoUK7JDLVrrYDj1vuN4pRENDFNQ6AOjimRQR9WelDqSiM12jSSBZ54qgla6QD0ajz5GS0IcwgGpKGGvkXK0a+0ff9Ba5jSsD8a/C+heEF5QPA44kKFFYaHuXfo1VJC+sq/mmeIiQJhe5nxU6rxVI7CjGf2RvdMyJRUr7pp4lZNvyKGcyo5ii2ppxybDhC1Og+CB3VJBJTc511ewWPkA1vqFvhYGH2CsZc7TVtb8yCfN9FbYTMYQ8IEyIgP7DzMCc390a1qaBigvwWbQJAQ5tzcwrUCzM803EYABAbvuW1rdSkUiwsB6qdwIAMZy2JRtCOwFwE7I+LcYydw6RI7/wdlAOcTm0aU="
-  project: "incident-response-626e6"
