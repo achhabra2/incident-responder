@@ -1,51 +1,24 @@
 {
-  "name": "incident-responder",
-  "description": "Spark Chat Bot for Emergency Notifications",
-  "version": "0.1.0",
-  "private": true,
-  "license": "Apache Version 2.0",
-  "author": "Aman Chhabra <aman.chhabra1@gmail.com>",
-  "repository": "https://github.com/achhabra2/incident-responder",
-  "engines": {
-    "node": "~6.0"
-  },
+  "name": "incident-responder-firebase",
+  "version": "0.1.1",
+  "description": "Firebase Helper Function for Cisco Spark Incident Response Bot",
   "scripts": {
-    "start": "firebase serve --only functions",
+    "install": "cd functions && npm install; cd ..",
+    "test": "cd functions && npm test; cd ..",
+    "dev": "firebase serve --only functions",
     "deploy": "firebase deploy --only functions",
-    "test": "npm run prepare && nyc mocha -r dotenv/config --timeout=6000",
-    "prepare": "babel ./src --presets latest --retain-lines -d ./dist --copy-files",
-    "predeploy": "npm run prepare",
-    "dev": "npm run prepare && firebase serve --only functions",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "cd functions && npm run coverage; cd ..",
+    "prepare": "cd functions && npm run prepare; cd ..",
+    "predeploy": "cd functions npm run prepare cd .."
   },
-  "dependencies": {
-    "apiai": "^4.0.3",
-    "babel-runtime": "^6.26.0",
-    "body-parser": "^1.18.2",
-    "ciscospark": "^1.18.0",
-    "express": "^4.16.2",
-    "firebase-admin": "^5.4.3",
-    "firebase-functions": "^0.7.2",
-    "moment": "^2.19.2",
-    "mongoose": "^4.13.1",
-    "superagent": "^3.8.1"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/achhabra2/incident-responder.git"
   },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-latest": "^6.24.1",
-    "chai": "^4.1.2",
-    "coveralls": "^3.0.0",
-    "dotenv": "^4.0.0",
-    "eslint": "^4.10.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "jsdoc": "^3.5.5",
-    "mocha": "^4.0.1",
-    "nyc": "^11.3.0",
-    "sinon": "^4.1.2",
-    "supertest": "^3.0.0",
-    "travis-encrypt": "github:pwmckenna/node-travis-encrypt"
-  }
+  "author": "Aman Chhabra <aman.chhabra1@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/achhabra2/incident-responder/issues"
+  },
+  "homepage": "https://github.com/achhabra2/incident-responder#readme"
 }

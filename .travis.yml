@@ -2,8 +2,6 @@ sudo: false
 language: node_js
 node_js:
   - node
-before_install:
-  - npm install --only=dev
 notifications:
   email:
     - aman.chhabra1@gmail.com

@@ -2,9 +2,14 @@
 const chai = require('chai');
 chai.should();
 const expect = chai.expect;
+const express = require('express');
+const bodyParser = require('body-parser');
 const request = require('supertest');
 
 const { iotEvent } = require('../dist/iotEvent');
+const app = express();
+app.use(bodyParser.json());
+app.post('/', iotEvent);
 
 describe('IOTEvent Module', function () {
   it('Should Expose iotEvent', function () {
@@ -19,7 +24,7 @@ describe('IOTEvent Function', function () {
       call: false,
       data: 'Blank'
     };
-    request(iotEvent).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(options)
@@ -31,7 +36,7 @@ describe('IOTEvent Function', function () {
       call: false,
       data: 'Blank'
     };
-    request(iotEvent).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(options)

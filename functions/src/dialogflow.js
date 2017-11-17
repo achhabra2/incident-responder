@@ -1,13 +1,9 @@
 import * as functions from 'firebase-functions';
-import express from 'express';
-import bodyParser from 'body-parser';
 import { sendResponse, followupResponse, getPersonStr } from './formatters';
 import { fireEvent } from './utils';
 import { SPARK_TOKEN } from '../config';
 import db from './userDb';
 
-const app = express();
-app.use(bodyParser.json());
 
 const Spark = require('ciscospark').init({
   credentials: {
@@ -151,5 +147,4 @@ function fulfillment(request, response) {
   actionHandlers[action]();
 }
 
-app.post('/', fulfillment);
-exports.dialogflowFulfillment = functions.https.onRequest(app);
+exports.dialogflowFulfillment = functions.https.onRequest(fulfillment);

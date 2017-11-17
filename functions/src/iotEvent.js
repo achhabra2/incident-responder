@@ -1,10 +1,5 @@
 const functions = require('firebase-functions'); // Cloud Functions for Firebase library
-const express = require('express');
-const bodyParser = require('body-parser');
 const { fireEvent } = require('./utils');
-
-const app = express();
-app.use(bodyParser.json());
 
 
 /**
@@ -17,8 +12,8 @@ app.use(bodyParser.json());
  * @param {Object} response HTTP Response
  */
 async function receiveIotEvent(req, res) {
-  // console.log(`Request headers: ${JSON.stringify(request.headers)}`);
-  // console.log(`Request body: ${JSON.stringify(request.body)}`);
+  console.log(`Request headers: ${JSON.stringify(req.headers)}`);
+  console.log(`Request body: ${JSON.stringify(req.body)}`);
   const {
     id, email, title, data, call,
   } = req.body;
@@ -44,7 +39,6 @@ async function receiveIotEvent(req, res) {
   } else res.status(400).end();
 }
 
-app.post('/', receiveIotEvent);
 
 exports.fireEvent = fireEvent;
-exports.iotEvent = functions.https.onRequest(app);
+exports.iotEvent = functions.https.onRequest(receiveIotEvent);

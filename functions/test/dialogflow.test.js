@@ -4,12 +4,18 @@ chai.should();
 const expect = chai.expect;
 const sinon = require('sinon');
 const request = require('supertest');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-const fullfillment = require('../dist/dialogflow').dialogflowFulfillment;
+const dialogflowFulfillment = require('../dist/dialogflow').dialogflowFulfillment;
 const payload = require('./postWithContext');
 const user_add = require('./samplePost.json');
 
-describe('Dialogflow Fullfillment', function () {
+const app = express();
+app.use(bodyParser.json());
+app.post('/', dialogflowFulfillment);
+
+describe('Dialogflow app', function () {
   it('Should process user.add', function (done) {
     let result = {
       action: 'user.add',
@@ -18,7 +24,7 @@ describe('Dialogflow Fullfillment', function () {
       }
     };
     let user_add_payload = Object.assign({}, user_add, { result });
-    request(fullfillment).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(user_add)
@@ -32,7 +38,7 @@ describe('Dialogflow Fullfillment', function () {
       }
     };
     let user_delete_payload = Object.assign({}, user_add, { result });
-    request(fullfillment).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(user_delete_payload)
@@ -46,7 +52,7 @@ describe('Dialogflow Fullfillment', function () {
       }
     };
     let user_delete_number_payload = Object.assign({}, user_add, { result });
-    request(fullfillment).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(user_delete_number_payload)
@@ -57,7 +63,7 @@ describe('Dialogflow Fullfillment', function () {
       action: 'user.list'
     };
     let user_list_payload = Object.assign({}, user_add, { result });
-    request(fullfillment).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(user_list_payload)
@@ -68,7 +74,7 @@ describe('Dialogflow Fullfillment', function () {
       action: 'endpoint.get'
     };
     let endpoint_get = Object.assign({}, user_add, { result });
-    request(fullfillment).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(endpoint_get)
@@ -82,7 +88,7 @@ describe('Dialogflow Fullfillment', function () {
       }
     };
     let user_messages_add = Object.assign({}, user_add, { result });
-    request(fullfillment).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(user_messages_add)
@@ -93,7 +99,7 @@ describe('Dialogflow Fullfillment', function () {
       action: 'user.messages.get'
     };
     let user_messages_get = Object.assign({}, user_add, { result });
-    request(fullfillment).post('/')
+    request(app).post('/')
       .accept('json')
       .type('application/json')
       .send(user_messages_get)
