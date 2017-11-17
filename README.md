@@ -1,6 +1,8 @@
 [![GitHub license](https://img.shields.io/github/license/achhabra2/incident-responder.svg)](https://github.com/achhabra2/incident-responder/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/achhabra2/incident-responder.svg?branch=master)](https://travis-ci.org/achhabra2/incident-responder)
+[![Coverage Status](https://coveralls.io/repos/github/achhabra2/incident-responder/badge.svg)](https://coveralls.io/github/achhabra2/incident-responder)
 [![GitHub issues](https://img.shields.io/github/issues/achhabra2/incident-responder.svg)](https://github.com/achhabra2/incident-responder/issues)
+---
 ## Incident Responder Cisco Spark Bot
 
 # Dialogflow: Webhook Template using Node.js and Cloud Functions for Firebase

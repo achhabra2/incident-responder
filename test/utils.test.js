@@ -5,6 +5,8 @@ const expect = chai.expect;
 
 const { sipCall, fireEvent } = require('../dist/utils');
 const db = require('../dist/userDb');
+const mongoose = require('mongoose');
+const { MONGO_URI } = require('../config');
 
 describe('Utils Module', function () {
   it('Should Expose FireEvent', function () {
@@ -14,6 +16,10 @@ describe('Utils Module', function () {
 
 describe('FireEvent Function', function () {
   before(async function () {
+    await mongoose.connect(
+      MONGO_URI,
+      { useMongoClient: true },
+    );
     await db.addEmail('test@user.com', 'aman.chhabra1+colonel@gmail.com');
     await db.addEmail('test@user.com', 'aman.chhabra1+bear@gmail.com');
     await db.addMessage('test@user.com', 'Mocha Test Message');
@@ -28,7 +34,7 @@ describe('FireEvent Function', function () {
     };
     return await fireEvent(options)
   });
-  it('Should throw an error when there is no user.', async function() {
+  it('Should throw an error when there is no user.', async function () {
     const options = {
       email: 'blank',
       title: 'Mocha Test Event',
@@ -45,5 +51,6 @@ describe('FireEvent Function', function () {
   after(async function () {
     await db.removeEmail('test@user.com', 'aman.chhabra1+colonel@gmail.com');
     await db.removeEmail('test@user.com', 'aman.chhabra1+bear@gmail.com');
+    mongoose.connection.close();
   });
 });

@@ -107,7 +107,7 @@ function fulfillment(request, response) {
         const comments = '// data and call are optional. \r\n// call is a true|false argument.';
         let mdMessage = 'Use the following [link](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send a HTTP POST request with  ';
         mdMessage += `JSON Body:\r\n\`\`\` javascript\r\n${payload}\r\n${comments}\r\n\`\`\``;
-        await Spark.messages.create({
+        Spark.messages.create({
           roomId: originalMessage.roomId,
           markdown: mdMessage,
         });
