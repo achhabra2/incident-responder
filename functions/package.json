@@ -12,7 +12,7 @@
   "scripts": {
     "test": "npm run prepare && nyc mocha -r dotenv/config --timeout=6000",
     "prepare": "babel ./src --presets latest --retain-lines -d ./dist --copy-files",
-    "dev": "npm run prepare && firebase serve --only functions",
+    "dev": "npm run prepare && firebase functions:config:get > .runtimeconfig.json && firebase experimental:functions:shell",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
