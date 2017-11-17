@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { sendResponse, followupResponse, getPersonStr } from './formatters';
-import { fireEvent } from './iotEvent';
+import { fireEvent } from './utils';
 import { SPARK_TOKEN } from '../config';
 import db from './userDb';
 
@@ -20,11 +20,6 @@ const Spark = require('ciscospark').init({
 function fulfillment(request, response) {
   // console.log(`Request headers: ${JSON.stringify(request.headers)}`);
   // console.log(`Request body: ${JSON.stringify(request.body)}`);
-
-  // // An action is a string used to identify what needs to be done in fulfillment
-  // const action = request.body.result.action; // https://dialogflow.com/docs/actions-and-parameters
-  // const inputContexts = request.body.result.contexts; // https://dialogflow.com/docs/contexts
-  // const parameters = request.body.result.parameters; //
 
   let { action, parameters, inputContexts } = request.body.result; // eslint-disable-line
 
@@ -140,8 +135,6 @@ function fulfillment(request, response) {
     // Default handler for unknown or undefined actions
     default: () => {
       const responseToUser = {
-        // richResponses: richResponses, // Optional, uncomment to enable
-        // outputContexts: [{'name': 'weather', 'lifespan': 2, 'parameters': {'city': 'Rome'}}], // Optional, uncomment to enable
         speech: 'This message is from Dialogflow\'s Cloud Functions for Firebase editor!', // spoken response
         displayText: 'This is from Dialogflow\'s Cloud Functions for Firebase editor! :-)', // displayed response
       };

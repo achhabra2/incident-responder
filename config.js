@@ -1,6 +1,7 @@
+const functions = require('firebase-functions');
 
 module.exports = {
-  MONGO_URI: 'process.env.MONGO_URI || mongodb://docker.chhab.rocks:32768/incidents',
-  SPARK_TOKEN: 'process.env.SPARK_TOKEN || N2UyYTdkNmEtOTkxNC00MWIyLTk2YzUtMTg5NTU2MTEwMzY1ZThjNjUwNDQtZDhk',
-  TROPO_TOKEN: 'process.env.TROPO_TOKEN ||5044427361756b4b7863626c64696a6b77784956454678694d4c794c506b6169655a76426e636158506a6f70',
+  MONGO_URI: process.env.MONGO_URI || functions.config().responder.mongouri,
+  SPARK_TOKEN: process.env.SPARK_TOKEN || functions.config().responder.sparktoken,
+  TROPO_TOKEN: process.env.TROPO_TOKEN || functions.config().tropotoken,
 };
