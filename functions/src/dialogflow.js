@@ -25,12 +25,24 @@ function fulfillment(request, response) {
   const actionHandlers = {
     'user.add': async () => {
       /* eslint-disable */
-      // console.log(`Adding Email to list for ${originalMessage.personEmail}: ${parameters.email}.`);
-      for (const email of parameters.email) {
-        await db.addEmail(originalMessage.personEmail, email);
+      const user = await db.getUser(originalMessage.personEmail);
+      let duplicates = [];
+      if (user && user.iotGroup) {
+        for (const email of parameters.email) {
+          if (user.iotGroup.indexOf(email)) {
+            duplicates.push(email)
+          }
+        }
       }
-      /* eslint-enable */
-      sendResponse(response, `Successfully added email(s) to your notification list: ${parameters.email.toString()}`);
+      if (duplicates.length === 0) {
+        for (const email of parameters.email) {
+          await db.addEmail(originalMessage.personEmail, email);
+        }
+        /* eslint-enable */
+        sendResponse(response, `Successfully added email(s) to your notification list: ${parameters.email.toString()}`);
+      } else {
+        sendResponse(response, `Sorry there are existing users found: ${duplicates.toString}. `);
+      }
     },
     'user.delete': async () => {
       if (!parameters.email || parameters.email.length === 0) {
