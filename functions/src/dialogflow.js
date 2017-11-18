@@ -24,22 +24,16 @@ function fulfillment(request, response) {
   // Create handlers for Dialogflow actions as well as a 'default' handler
   const actionHandlers = {
     'user.add': async () => {
-      let emailString = '';
       /* eslint-disable */
       // console.log(`Adding Email to list for ${originalMessage.personEmail}: ${parameters.email}.`);
       for (const email of parameters.email) {
-        let user = await db.addEmail(originalMessage.personEmail, email);
-        emailString += `**${email}**, `;
+        await db.addEmail(originalMessage.personEmail, email);
       }
       /* eslint-enable */
-      Spark.messages.create({
-        roomId: originalMessage.roomId,
-        markdown: `Successfully added email(s) to your notification list: ${emailString}`,
-      });
-      response.end();
+      sendResponse(response, `Successfully added email(s) to your notification list: ${parameters.email.toString()}`);
     },
     'user.delete': async () => {
-      if (!parameters.email) {
+      if (!parameters.email || parameters.email.length === 0) {
         const event = { name: 'webhook-list' };
         const user = await db.getUser(originalMessage.personEmail);
         event.data = { emails: user.iotGroup };
@@ -50,12 +44,23 @@ function fulfillment(request, response) {
           markdown: `${personStr}`,
         });
       } else {
-        await db.removeEmail(originalMessage.personEmail, parameters.email);
-        Spark.messages.create({
-          roomId: originalMessage.roomId,
-          markdown: `Successfully removed email(s): **${parameters.email}**`,
-        });
-        response.end();
+        const user = await db.getUser(originalMessage.personEmail);
+        const deleteArray = [];
+        /* eslint-disable */
+        for (const email of parameters.email) {
+          if (user.iotGroup.indexOf(email)) {
+            deleteArray.push(email);
+          }
+        }
+        if (deleteArray.length > 0) {
+          for (const email of deleteArray) {
+            await db.removeEmail(originalMessage.personEmail, parameters.email);
+          }
+          sendResponse(response, `Successfully removed emails ${deleteArray.toString()}.`);
+        } else {
+          sendResponse(response, 'No email addresses found that could be removed. ');
+        }
+        /* eslint-enable */
       }
     },
     'user.delete.number': async () => {
@@ -93,16 +98,18 @@ function fulfillment(request, response) {
     'endpoint.get': async () => {
       const user = await db.getUser(originalMessage.personEmail);
       if (user) {
-        const payload = JSON.stringify({
+        const sampleJson = {
           id: user._id,
-          // email: originalMessage.personEmail,
           title: 'Your Event Title',
           data: 'Optional Data Message to be sent. ',
           call: false,
-        }, null, 2);
+        };
+        const payload = JSON.stringify(sampleJson, null, 2);
+        const link = 'https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent';
         const comments = '// data and call are optional. \r\n// call is a true|false argument.';
+        const curl = `curl -d '${JSON.stringify(sampleJson)}' -H "Content-Type: application/json" -X POST ${link}`;
         let mdMessage = 'Use the following [link](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send a HTTP POST request with  ';
-        mdMessage += `JSON Body:\r\n\`\`\` javascript\r\n${payload}\r\n${comments}\r\n\`\`\``;
+        mdMessage += `JSON Body:\r\n\`\`\` javascript\r\n${payload}\r\n${comments}\r\n${curl}\r\n\`\`\``;
         Spark.messages.create({
           roomId: originalMessage.roomId,
           markdown: mdMessage,
