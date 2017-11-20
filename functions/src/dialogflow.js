@@ -25,15 +25,7 @@ function fulfillment(request, response) {
   const actionHandlers = {
     'user.add': async () => {
       /* eslint-disable */
-      const user = await db.getUser(originalMessage.personEmail);
-      let duplicates = [];
-      if (user && user.iotGroup) {
-        for (const email of parameters.email) {
-          if (user.iotGroup.indexOf(email)) {
-            duplicates.push(email)
-          }
-        }
-      }
+      const duplicates = await db.findDuplicates(originalMessage.personEmail, parameters.email);
       if (duplicates.length === 0) {
         for (const email of parameters.email) {
           await db.addEmail(originalMessage.personEmail, email);
@@ -41,7 +33,7 @@ function fulfillment(request, response) {
         /* eslint-enable */
         sendResponse(response, `Successfully added email(s) to your notification list: ${parameters.email.toString()}`);
       } else {
-        sendResponse(response, `Sorry there are existing users found: ${duplicates.toString}. `);
+        sendResponse(response, `Sorry there are existing users found: ${duplicates.toString()}. `);
       }
     },
     'user.delete': async () => {
@@ -56,23 +48,22 @@ function fulfillment(request, response) {
           markdown: `${personStr}`,
         });
       } else {
-        const user = await db.getUser(originalMessage.personEmail);
-        const deleteArray = [];
-        /* eslint-disable */
-        for (const email of parameters.email) {
-          if (user.iotGroup.indexOf(email)) {
-            deleteArray.push(email);
-          }
+        let deleteArray;
+        try {
+          deleteArray = await db.findDuplicates(originalMessage.personEmail, parameters.email);
+        } catch (error) {
+          deleteArray = [];
         }
         if (deleteArray.length > 0) {
+          /* eslint-disable */
           for (const email of deleteArray) {
             await db.removeEmail(originalMessage.personEmail, parameters.email);
           }
+          /* eslint-enable */
           sendResponse(response, `Successfully removed emails ${deleteArray.toString()}.`);
         } else {
           sendResponse(response, 'No email addresses found that could be removed. ');
         }
-        /* eslint-enable */
       }
     },
     'user.delete.number': async () => {

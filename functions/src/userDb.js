@@ -72,10 +72,26 @@ export const getUserbyId = (stringId) => {
   return User.findById(id).exec();
 };
 
+export const findDuplicates = async (personEmail, emails) => {
+  const user = await getUser(personEmail);
+  const duplicates = [];
+  if (user && user.iotGroup) {
+    /* eslint-disable */
+    for (const email of emails) {
+      if (user.iotGroup.indexOf(email) != -1) {
+        duplicates.push(email);
+      }
+    }
+    /* eslint-enable */
+  }
+  return duplicates;
+};
+
 export default {
   addEmail,
   removeEmail,
   addMessage,
   getUser,
   getUserbyId,
+  findDuplicates,
 };

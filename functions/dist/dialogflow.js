@@ -41,7 +41,7 @@ function fulfillment(request, response) {var _this = this;
                 /* eslint-enable */
                 (0, _formatters.sendResponse)(response, 'Successfully added email(s) to your notification list: ' + parameters.email.toString());_context.next = 55;break;case 54:
 
-                (0, _formatters.sendResponse)(response, 'Sorry there are existing users found: ' + duplicates.toString + '. ');case 55:case 'end':return _context.stop();}}}, _callee, _this, [[8, 12, 16, 24], [17,, 19, 23], [28, 39, 43, 51], [44,, 46, 50]]);}));return function userAdd() {return _ref.apply(this, arguments);};}(),
+                (0, _formatters.sendResponse)(response, 'Sorry there are existing users found: ' + duplicates.toString() + '. ');case 55:case 'end':return _context.stop();}}}, _callee, _this, [[8, 12, 16, 24], [17,, 19, 23], [28, 39, 43, 51], [44,, 46, 50]]);}));return function userAdd() {return _ref.apply(this, arguments);};}(),
 
 
     'user.delete': function () {var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {var event, user, personStr, _user, deleteArray, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _email2, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, email;return _regenerator2.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:if (!(
