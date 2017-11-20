@@ -57,7 +57,7 @@ function fulfillment(request, response) {
         if (deleteArray.length > 0) {
           /* eslint-disable */
           for (const email of deleteArray) {
-            await db.removeEmail(originalMessage.personEmail, parameters.email);
+            await db.removeEmail(originalMessage.personEmail, email);
           }
           /* eslint-enable */
           sendResponse(response, `Successfully removed emails ${deleteArray.toString()}.`);
