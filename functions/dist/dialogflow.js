@@ -23,28 +23,20 @@ function fulfillment(request, response) {var _this = this;
 
   // Create handlers for Dialogflow actions as well as a 'default' handler
   var actionHandlers = {
-    'user.add': function () {var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {var user, duplicates, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, email, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _email;return _regenerator2.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
+    'user.add': function () {var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {var duplicates, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, email;return _regenerator2.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
 
-                  _userDb2.default.getUser(originalMessage.personEmail));case 2:user = _context.sent;
-                duplicates = [];if (!(
-                user && user.iotGroup)) {_context.next = 24;break;}_iteratorNormalCompletion = true;_didIteratorError = false;_iteratorError = undefined;_context.prev = 8;
-                for (_iterator = parameters.email[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {email = _step.value;
-                  if (user.iotGroup.indexOf(email)) {
-                    duplicates.push(email);
-                  }
-                }_context.next = 16;break;case 12:_context.prev = 12;_context.t0 = _context['catch'](8);_didIteratorError = true;_iteratorError = _context.t0;case 16:_context.prev = 16;_context.prev = 17;if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}case 19:_context.prev = 19;if (!_didIteratorError) {_context.next = 22;break;}throw _iteratorError;case 22:return _context.finish(19);case 23:return _context.finish(16);case 24:if (!(
-
-                duplicates.length === 0)) {_context.next = 54;break;}_iteratorNormalCompletion2 = true;_didIteratorError2 = false;_iteratorError2 = undefined;_context.prev = 28;_iterator2 =
-                parameters.email[Symbol.iterator]();case 30:if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {_context.next = 37;break;}_email = _step2.value;_context.next = 34;return (
-                  _userDb2.default.addEmail(originalMessage.personEmail, _email));case 34:_iteratorNormalCompletion2 = true;_context.next = 30;break;case 37:_context.next = 43;break;case 39:_context.prev = 39;_context.t1 = _context['catch'](28);_didIteratorError2 = true;_iteratorError2 = _context.t1;case 43:_context.prev = 43;_context.prev = 44;if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}case 46:_context.prev = 46;if (!_didIteratorError2) {_context.next = 49;break;}throw _iteratorError2;case 49:return _context.finish(46);case 50:return _context.finish(43);case 51:
+                  _userDb2.default.findDuplicates(originalMessage.personEmail, parameters.email));case 2:duplicates = _context.sent;if (!(
+                duplicates.length === 0)) {_context.next = 33;break;}_iteratorNormalCompletion = true;_didIteratorError = false;_iteratorError = undefined;_context.prev = 7;_iterator =
+                parameters.email[Symbol.iterator]();case 9:if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {_context.next = 16;break;}email = _step.value;_context.next = 13;return (
+                  _userDb2.default.addEmail(originalMessage.personEmail, email));case 13:_iteratorNormalCompletion = true;_context.next = 9;break;case 16:_context.next = 22;break;case 18:_context.prev = 18;_context.t0 = _context['catch'](7);_didIteratorError = true;_iteratorError = _context.t0;case 22:_context.prev = 22;_context.prev = 23;if (!_iteratorNormalCompletion && _iterator.return) {_iterator.return();}case 25:_context.prev = 25;if (!_didIteratorError) {_context.next = 28;break;}throw _iteratorError;case 28:return _context.finish(25);case 29:return _context.finish(22);case 30:
 
                 /* eslint-enable */
-                (0, _formatters.sendResponse)(response, 'Successfully added email(s) to your notification list: ' + parameters.email.toString());_context.next = 55;break;case 54:
+                (0, _formatters.sendResponse)(response, 'Successfully added email(s) to your notification list: ' + parameters.email.toString());_context.next = 34;break;case 33:
 
-                (0, _formatters.sendResponse)(response, 'Sorry there are existing users found: ' + duplicates.toString() + '. ');case 55:case 'end':return _context.stop();}}}, _callee, _this, [[8, 12, 16, 24], [17,, 19, 23], [28, 39, 43, 51], [44,, 46, 50]]);}));return function userAdd() {return _ref.apply(this, arguments);};}(),
+                (0, _formatters.sendResponse)(response, 'Sorry there are existing users found: ' + duplicates.toString() + '. ');case 34:case 'end':return _context.stop();}}}, _callee, _this, [[7, 18, 22, 30], [23,, 25, 29]]);}));return function userAdd() {return _ref.apply(this, arguments);};}(),
 
 
-    'user.delete': function () {var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {var event, user, personStr, _user, deleteArray, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, _email2, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, email;return _regenerator2.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:if (!(
+    'user.delete': function () {var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {var event, user, personStr, deleteArray, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, email;return _regenerator2.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:if (!(
                 !parameters.email || parameters.email.length === 0)) {_context2.next = 11;break;}
                 event = { name: 'webhook-list' };_context2.next = 4;return (
                   _userDb2.default.getUser(originalMessage.personEmail));case 4:user = _context2.sent;
@@ -53,40 +45,39 @@ function fulfillment(request, response) {var _this = this;
                 (0, _formatters.followupResponse)(response, event);
                 Spark.messages.create({
                   roomId: originalMessage.roomId,
-                  markdown: '' + personStr });_context2.next = 65;break;case 11:_context2.next = 13;return (
+                  markdown: '' + personStr });_context2.next = 52;break;case 11:
 
 
-                  _userDb2.default.getUser(originalMessage.personEmail));case 13:_user = _context2.sent;
-                deleteArray = [];
-                /* eslint-disable */_iteratorNormalCompletion3 = true;_didIteratorError3 = false;_iteratorError3 = undefined;_context2.prev = 18;
-                for (_iterator3 = parameters.email[Symbol.iterator](); !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {_email2 = _step3.value;
-                  if (_user.iotGroup.indexOf(_email2)) {
-                    deleteArray.push(_email2);
-                  }
-                }_context2.next = 26;break;case 22:_context2.prev = 22;_context2.t0 = _context2['catch'](18);_didIteratorError3 = true;_iteratorError3 = _context2.t0;case 26:_context2.prev = 26;_context2.prev = 27;if (!_iteratorNormalCompletion3 && _iterator3.return) {_iterator3.return();}case 29:_context2.prev = 29;if (!_didIteratorError3) {_context2.next = 32;break;}throw _iteratorError3;case 32:return _context2.finish(29);case 33:return _context2.finish(26);case 34:if (!(
-                deleteArray.length > 0)) {_context2.next = 64;break;}_iteratorNormalCompletion4 = true;_didIteratorError4 = false;_iteratorError4 = undefined;_context2.prev = 38;_iterator4 =
-                deleteArray[Symbol.iterator]();case 40:if (_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done) {_context2.next = 47;break;}email = _step4.value;_context2.next = 44;return (
-                  _userDb2.default.removeEmail(originalMessage.personEmail, parameters.email));case 44:_iteratorNormalCompletion4 = true;_context2.next = 40;break;case 47:_context2.next = 53;break;case 49:_context2.prev = 49;_context2.t1 = _context2['catch'](38);_didIteratorError4 = true;_iteratorError4 = _context2.t1;case 53:_context2.prev = 53;_context2.prev = 54;if (!_iteratorNormalCompletion4 && _iterator4.return) {_iterator4.return();}case 56:_context2.prev = 56;if (!_didIteratorError4) {_context2.next = 59;break;}throw _iteratorError4;case 59:return _context2.finish(56);case 60:return _context2.finish(53);case 61:
+                deleteArray = void 0;_context2.prev = 12;_context2.next = 15;return (
 
-                (0, _formatters.sendResponse)(response, 'Successfully removed emails ' + deleteArray.toString() + '.');_context2.next = 65;break;case 64:
+                  _userDb2.default.findDuplicates(originalMessage.personEmail, parameters.email));case 15:deleteArray = _context2.sent;_context2.next = 21;break;case 18:_context2.prev = 18;_context2.t0 = _context2['catch'](12);
 
-                (0, _formatters.sendResponse)(response, 'No email addresses found that could be removed. ');case 65:case 'end':return _context2.stop();}}}, _callee2, _this, [[18, 22, 26, 34], [27,, 29, 33], [38, 49, 53, 61], [54,, 56, 60]]);}));return function userDelete() {return _ref2.apply(this, arguments);};}(),
+                deleteArray = [];case 21:if (!(
 
+                deleteArray.length > 0)) {_context2.next = 51;break;}
+                /* eslint-disable */_iteratorNormalCompletion2 = true;_didIteratorError2 = false;_iteratorError2 = undefined;_context2.prev = 25;_iterator2 =
+                deleteArray[Symbol.iterator]();case 27:if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {_context2.next = 34;break;}email = _step2.value;_context2.next = 31;return (
+                  _userDb2.default.removeEmail(originalMessage.personEmail, parameters.email));case 31:_iteratorNormalCompletion2 = true;_context2.next = 27;break;case 34:_context2.next = 40;break;case 36:_context2.prev = 36;_context2.t1 = _context2['catch'](25);_didIteratorError2 = true;_iteratorError2 = _context2.t1;case 40:_context2.prev = 40;_context2.prev = 41;if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}case 43:_context2.prev = 43;if (!_didIteratorError2) {_context2.next = 46;break;}throw _iteratorError2;case 46:return _context2.finish(43);case 47:return _context2.finish(40);case 48:
 
+                /* eslint-enable */
+                (0, _formatters.sendResponse)(response, 'Successfully removed emails ' + deleteArray.toString() + '.');_context2.next = 52;break;case 51:
+
+                (0, _formatters.sendResponse)(response, 'No email addresses found that could be removed. ');case 52:case 'end':return _context2.stop();}}}, _callee2, _this, [[12, 18], [25, 36, 40, 48], [41,, 43, 47]]);}));return function userDelete() {return _ref2.apply(this, arguments);};}(),
 
 
-    'user.delete.number': function () {var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {var user, deletedUsers, _iteratorNormalCompletion5, _didIteratorError5, _iteratorError5, _iterator5, _step5, number;return _regenerator2.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:
+
+    'user.delete.number': function () {var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {var user, deletedUsers, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, number;return _regenerator2.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:
                 console.log('Delete by number webhook triggered. ');_context3.next = 3;return (
                   _userDb2.default.getUser(originalMessage.personEmail));case 3:user = _context3.sent;if (!(
                 user.iotGroup && parameters.number)) {_context3.next = 41;break;}
                 deletedUsers = [];
-                /* eslint-disable */_iteratorNormalCompletion5 = true;_didIteratorError5 = false;_iteratorError5 = undefined;_context3.prev = 9;_iterator5 =
-                parameters.number[Symbol.iterator]();case 11:if (_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done) {_context3.next = 24;break;}number = _step5.value;if (!(
+                /* eslint-disable */_iteratorNormalCompletion3 = true;_didIteratorError3 = false;_iteratorError3 = undefined;_context3.prev = 9;_iterator3 =
+                parameters.number[Symbol.iterator]();case 11:if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {_context3.next = 24;break;}number = _step3.value;if (!(
                 number - 1 < user.iotGroup.length)) {_context3.next = 19;break;}
                 deletedUsers.push(user.iotGroup[number - 1]);_context3.next = 17;return (
                   user.update({ $pull: { iotGroup: user.iotGroup[number - 1] } }).exec());case 17:_context3.next = 21;break;case 19:
 
-                (0, _formatters.sendResponse)(response, 'Invalid entry ' + number + '. Could not remove. ');return _context3.abrupt('return');case 21:_iteratorNormalCompletion5 = true;_context3.next = 11;break;case 24:_context3.next = 30;break;case 26:_context3.prev = 26;_context3.t0 = _context3['catch'](9);_didIteratorError5 = true;_iteratorError5 = _context3.t0;case 30:_context3.prev = 30;_context3.prev = 31;if (!_iteratorNormalCompletion5 && _iterator5.return) {_iterator5.return();}case 33:_context3.prev = 33;if (!_didIteratorError5) {_context3.next = 36;break;}throw _iteratorError5;case 36:return _context3.finish(33);case 37:return _context3.finish(30);case 38:
+                (0, _formatters.sendResponse)(response, 'Invalid entry ' + number + '. Could not remove. ');return _context3.abrupt('return');case 21:_iteratorNormalCompletion3 = true;_context3.next = 11;break;case 24:_context3.next = 30;break;case 26:_context3.prev = 26;_context3.t0 = _context3['catch'](9);_didIteratorError3 = true;_iteratorError3 = _context3.t0;case 30:_context3.prev = 30;_context3.prev = 31;if (!_iteratorNormalCompletion3 && _iterator3.return) {_iterator3.return();}case 33:_context3.prev = 33;if (!_didIteratorError3) {_context3.next = 36;break;}throw _iteratorError3;case 36:return _context3.finish(33);case 37:return _context3.finish(30);case 38:
 
 
 
