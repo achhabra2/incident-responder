@@ -112,8 +112,8 @@ function fulfillment(request, response) {
         const comments = '// data (optional) - Sensor data you\'d like to include in the message.\r\n// call is a true|false argument. True if you want to immediately start Spark Meeting.';
         const curl = `curl -d '${JSON.stringify(sampleJson)}' -H "Content-Type: application/json" -X POST ${link}`;
         let mdMessage = 'Use the following [URL](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send an HTTP POST request with  ';
-        mdMessage += `JSON Data:\r\n\`\`\`javascript\r\n${payload}\r\n${comments}\r\n\`\`\``;
-        mdMessage += `\r\nYou can also use the following curl command: \r\n\`\`${curl}\`\``;
+        mdMessage += `JSON Data:\r\n\`\`\`javascript\r\n${payload}\r\n${comments}\r\n\`\`\`\r\n`;
+        mdMessage += `You can also use the following curl command: \r\n\`\`${curl}\`\``;
         Spark.messages.create({
           roomId: originalMessage.roomId,
           markdown: mdMessage,
@@ -136,7 +136,11 @@ function fulfillment(request, response) {
     'user.messages.get': async () => {
       try {
         const user = await db.getUser(originalMessage.personEmail);
-        sendResponse(response, `Your Event message is: ${user.iotMessage}`);
+        if (user.iotMessage) {
+          sendResponse(response, `Your Event message is: ${user.iotMessage}`);
+        } else {
+          sendResponse(response, 'Sorry you have not set an event message yet. ');
+        }
       } catch (e) { sendResponse(response, 'Error Getting Message'); }
     },
     'event.fire': () => {

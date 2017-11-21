@@ -112,8 +112,8 @@ function fulfillment(request, response) {var _this = this;
                   comments = '// data (optional) - Sensor data you\'d like to include in the message.\r\n// call is a true|false argument. True if you want to immediately start Spark Meeting.';
                   curl = 'curl -d \'' + JSON.stringify(sampleJson) + '\' -H "Content-Type: application/json" -X POST ' + link;
                   mdMessage = 'Use the following [URL](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send an HTTP POST request with  ';
-                  mdMessage += 'JSON Data:\r\n```javascript\r\n' + payload + '\r\n' + comments + '\r\n```';
-                  mdMessage += '\r\nYou can also use the following curl command: \r\n``' + curl + '``';
+                  mdMessage += 'JSON Data:\r\n```javascript\r\n' + payload + '\r\n' + comments + '\r\n```\r\n';
+                  mdMessage += 'You can also use the following curl command: \r\n``' + curl + '``';
                   Spark.messages.create({
                     roomId: originalMessage.roomId,
                     markdown: mdMessage });
@@ -136,7 +136,11 @@ function fulfillment(request, response) {var _this = this;
     'user.messages.get': function () {var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7() {var user;return _regenerator2.default.wrap(function _callee7$(_context7) {while (1) {switch (_context7.prev = _context7.next) {case 0:_context7.prev = 0;_context7.next = 3;return (
 
                   _userDb2.default.getUser(originalMessage.personEmail));case 3:user = _context7.sent;
-                (0, _formatters.sendResponse)(response, 'Your Event message is: ' + user.iotMessage);_context7.next = 10;break;case 7:_context7.prev = 7;_context7.t0 = _context7['catch'](0);
+                if (user.iotMessage) {
+                  (0, _formatters.sendResponse)(response, 'Your Event message is: ' + user.iotMessage);
+                } else {
+                  (0, _formatters.sendResponse)(response, 'Sorry you have not set an event message yet. ');
+                }_context7.next = 10;break;case 7:_context7.prev = 7;_context7.t0 = _context7['catch'](0);
                 (0, _formatters.sendResponse)(response, 'Error Getting Message');case 10:case 'end':return _context7.stop();}}}, _callee7, _this, [[0, 7]]);}));return function userMessagesGet() {return _ref7.apply(this, arguments);};}(),
 
     'event.fire': function eventFire() {

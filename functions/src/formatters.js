@@ -43,6 +43,7 @@ const getPersonStr = (user) => {
       personStr += `${index + 1}. ${person} \r\n`;
     });
   }
+  personStr += '\r\nTo edit tell me the number of the person you\'d like to remove.';
   return personStr;
 };
 
