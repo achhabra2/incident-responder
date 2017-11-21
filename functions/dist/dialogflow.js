@@ -109,10 +109,11 @@ function fulfillment(request, response) {var _this = this;
 
                   payload = JSON.stringify(sampleJson, null, 2);
                   link = 'https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent';
-                  comments = '// data and call are optional. \r\n// call is a true|false argument.';
+                  comments = '// data (optional) - Sensor data you\'d like to include in the message.\r\n// call is a true|false argument. True if you want to immediately start Spark Meeting.';
                   curl = 'curl -d \'' + JSON.stringify(sampleJson) + '\' -H "Content-Type: application/json" -X POST ' + link;
-                  mdMessage = 'Use the following [link](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send a HTTP POST request with  ';
-                  mdMessage += 'JSON Body:\r\n``` javascript\r\n' + payload + '\r\n' + comments + '\r\n' + curl + '\r\n```';
+                  mdMessage = 'Use the following [URL](https://us-central1-incident-response-626e6.cloudfunctions.net/iotEvent) and send an HTTP POST request with  ';
+                  mdMessage += 'JSON Data:\r\n```javascript\r\n' + payload + '\r\n' + comments + '\r\n```';
+                  mdMessage += '\r\nYou can also use the following curl command: \r\n``' + curl + '``';
                   Spark.messages.create({
                     roomId: originalMessage.roomId,
                     markdown: mdMessage });
