@@ -91,7 +91,7 @@ async function fireEvent(options) {
         text: iotMessage,
       });
       if (data) {
-        Spark.messages.create({
+        await Spark.messages.create({
           roomId: room.id,
           markdown: `Data Sent: ${data}`,
           text: `Data Sent: ${data}`,
@@ -102,6 +102,8 @@ async function fireEvent(options) {
         console.log(`Room Detail: ${JSON.stringify(roomDetail)}`);
         sipCall(roomDetail.sipAddress);
       }
+    } else {
+      throw new Error('Error in Firiring Event through Spark.');
     }
   } catch (error) {
     console.error(error);

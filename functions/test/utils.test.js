@@ -27,7 +27,7 @@ describe('FireEvent Function', function () {
   it('Should find user and create spark space', async function () {
     this.timeout(10000);
     const options = {
-      id: '5a0b7860434de9a0a34f07f0',
+      id: '5a2df7ae9658fb8074acf55f',
       title: 'Mocha Test Event',
       call: false,
       data: 'Blank'

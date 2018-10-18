@@ -71,7 +71,7 @@
 
 
             user, iotMessage = _user.iotMessage, iotGroup = _user.iotGroup;if (!(
-            iotMessage && iotGroup)) {_context2.next = 39;break;}
+            iotMessage && iotGroup)) {_context2.next = 43;break;}
             timeString = moment().format('MMM Do - h:mm a');_context2.next = 25;return (
               Spark.rooms.create({
                 title: title + ' @ ' + timeString }));case 25:room = _context2.sent;
@@ -88,24 +88,26 @@
               Spark.messages.create({
                 roomId: room.id,
                 markdown: iotMessage,
-                text: iotMessage }));case 32:
+                text: iotMessage }));case 32:if (!
 
-            if (data) {
+            data) {_context2.next = 35;break;}_context2.next = 35;return (
               Spark.messages.create({
                 roomId: room.id,
                 markdown: 'Data Sent: ' + data,
-                text: 'Data Sent: ' + data });
+                text: 'Data Sent: ' + data }));case 35:if (!
 
-            }if (!
-            call) {_context2.next = 39;break;}_context2.next = 36;return (
-              Spark.rooms.get(room.id));case 36:roomDetail = _context2.sent;
+
+            call) {_context2.next = 41;break;}_context2.next = 38;return (
+              Spark.rooms.get(room.id));case 38:roomDetail = _context2.sent;
             console.log('Room Detail: ' + JSON.stringify(roomDetail));
-            sipCall(roomDetail.sipAddress);case 39:_context2.next = 45;break;case 41:_context2.prev = 41;_context2.t1 = _context2['catch'](19);
+            sipCall(roomDetail.sipAddress);case 41:_context2.next = 44;break;case 43:throw (
 
+
+              new Error('Error in Firiring Event through Spark.'));case 44:_context2.next = 50;break;case 46:_context2.prev = 46;_context2.t1 = _context2['catch'](19);
 
 
             console.error(_context2.t1);throw (
-              new Error('Error in Firiring Event through Spark.'));case 45:case 'end':return _context2.stop();}}}, _callee2, this, [[2, 13], [19, 41]]);}));return function fireEvent(_x2) {return _ref2.apply(this, arguments);};}();function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _require = require('../config'),SPARK_TOKEN = _require.SPARK_TOKEN,TROPO_TOKEN = _require.TROPO_TOKEN;var superagent = require('superagent');var moment = require('moment');var Spark = require('ciscospark').init({ credentials: { authorization: { access_token: SPARK_TOKEN } } });var db = require('./userDb'); /**
+              new Error('Error in Firiring Event through Spark.'));case 50:case 'end':return _context2.stop();}}}, _callee2, this, [[2, 13], [19, 46]]);}));return function fireEvent(_x2) {return _ref2.apply(this, arguments);};}();function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _require = require('../config'),SPARK_TOKEN = _require.SPARK_TOKEN,TROPO_TOKEN = _require.TROPO_TOKEN;var superagent = require('superagent');var moment = require('moment');var Spark = require('ciscospark').init({ credentials: { authorization: { access_token: SPARK_TOKEN } } });var db = require('./userDb'); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             *
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * Helper function - uses tropo to start a SIP call to the specified address.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             * @async

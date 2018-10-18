@@ -31,9 +31,17 @@ function fulfillment(request, response) {
           await db.addEmail(originalMessage.personEmail, email);
         }
         /* eslint-enable */
-        sendResponse(response, `Successfully added email(s) to your notification list: ${parameters.email.toString()}`);
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: `Successfully added email(s) to your notification list: ${parameters.email.toString()}`,
+        });
+        response.end();
       } else {
-        sendResponse(response, `Sorry there are existing users found: ${duplicates.toString()}. `);
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: `Sorry there are existing users found: ${duplicates.toString()}. `,
+        });
+        response.end();
       }
     },
     'user.delete': async () => {
@@ -43,7 +51,7 @@ function fulfillment(request, response) {
         event.data = { emails: user.iotGroup };
         const personStr = getPersonStr(user);
         followupResponse(response, event);
-        Spark.messages.create({
+        await Spark.messages.create({
           roomId: originalMessage.roomId,
           markdown: `${personStr}`,
         });
@@ -60,9 +68,17 @@ function fulfillment(request, response) {
             await db.removeEmail(originalMessage.personEmail, email);
           }
           /* eslint-enable */
-          sendResponse(response, `Successfully removed emails ${deleteArray.toString()}.`);
+          Spark.messages.create({
+            roomId: originalMessage.roomId,
+            markdown: `Successfully removed emails ${deleteArray.toString()}.`,
+          });
+          response.end();
         } else {
-          sendResponse(response, 'No email addresses found that could be removed. ');
+          Spark.messages.create({
+            roomId: originalMessage.roomId,
+            markdown: 'No email addresses found that could be removed. ',
+          });
+          response.end();
         }
       }
     },
@@ -77,25 +93,43 @@ function fulfillment(request, response) {
             deletedUsers.push(user.iotGroup[number - 1]);
             await user.update({ $pull: { iotGroup: user.iotGroup[number - 1] } }).exec();
           } else {
-            sendResponse(response, `Invalid entry ${number}. Could not remove. `);
+            Spark.messages.create({
+              roomId: originalMessage.roomId,
+              markdown: `Invalid entry ${number}. Could not remove. `,
+            });
+            response.end();
             return;
           }
         }
         /* eslint-enable */
-        sendResponse(response, `Deleted user(s) ${deletedUsers.toString()} successfully.`);
-      } else sendResponse(response, 'Invalid request. Error Deleting User. ');
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: `Deleted user(s) ${deletedUsers.toString()} successfully.`,
+        });
+        response.end();
+      } else {
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: 'Invalid request. Error Deleting User. ',
+        });
+        response.end();
+      }
     },
     'user.list': async () => {
       const user = await db.getUser(originalMessage.personEmail);
       const personStr = getPersonStr(user);
       if (personStr) {
-        sendResponse(response, 'Here is your notification list: ');
+        response.end();
         Spark.messages.create({
           roomId: originalMessage.roomId,
-          markdown: `${personStr}`,
+          markdown: `Here is your notification list: \r\n${personStr}`,
         });
       } else {
-        sendResponse(response, 'Sorry you have no one in your list. ');
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: 'Sorry you have no one in your list. ',
+        });
+        response.end();
       }
     },
     'endpoint.get': async () => {
@@ -120,32 +154,85 @@ function fulfillment(request, response) {
         });
         response.end();
       } else {
-        sendResponse('Looks like you have not added any users yet. Please finish configuration first.');
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: 'Looks like you have not added any users yet. Please finish configuration first.',
+        });
+        response.end();
       }
     },
     'user.messages.add': async () => {
       if (parameters.message) {
         try {
           await db.addMessage(originalMessage.personEmail, parameters.message);
-          sendResponse(response, 'Successfully Updated IOT Event Message');
+          Spark.messages.create({
+            roomId: originalMessage.roomId,
+            markdown: 'Successfully Updated IOT Event Message',
+          });
+          response.end();
         } catch (error) {
-          sendResponse(response, 'Error updating your message. ');
+          Spark.messages.create({
+            roomId: originalMessage.roomId,
+            markdown: 'Error updating your message. ',
+          });
+          response.end();
         }
-      } else sendResponse(response, 'No message specified. ');
+      } else {
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: 'No message specified. ',
+        });
+        response.end();
+      }
     },
     'user.messages.get': async () => {
       try {
         const user = await db.getUser(originalMessage.personEmail);
         if (user.iotMessage) {
-          sendResponse(response, `Your Event message is: ${user.iotMessage}`);
+          Spark.messages.create({
+            roomId: originalMessage.roomId,
+            markdown: `Your Event message is: ${user.iotMessage}`,
+          });
+          response.end();
         } else {
-          sendResponse(response, 'Sorry you have not set an event message yet. ');
+          Spark.messages.create({
+            roomId: originalMessage.roomId,
+            markdown: 'Sorry you have not set an event message yet. ',
+          });
+          response.end();
         }
-      } catch (e) { sendResponse(response, 'Error Getting Message'); }
+      } catch (e) {
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: 'Error Getting Message',
+        });
+        response.end();
+      }
     },
-    'event.fire': () => {
-      fireEvent({ email: originalMessage.personEmail, title: parameters.title });
-      sendResponse(response, 'Starting IOT Event');
+    'event.fire': async () => {
+      try {
+        const user = await db.getUser(originalMessage.personEmail);
+        if (user.iotMessage && user.iotGroup) {
+          Spark.messages.create({
+            roomId: originalMessage.roomId,
+            markdown: 'Starting IOT Event',
+          });
+          response.end();
+          await fireEvent({ email: originalMessage.personEmail, title: parameters.title });
+        } else {
+          Spark.messages.create({
+            roomId: originalMessage.roomId,
+            markdown: 'Sorry you have not set your notification group and message. ',
+          });
+          response.end();
+        }
+      } catch (e) {
+        Spark.messages.create({
+          roomId: originalMessage.roomId,
+          markdown: 'Sorry there was an error pulling up your saved information. ',
+        });
+        response.end();
+      }
     },
     // Default handler for unknown or undefined actions
     default: () => {
